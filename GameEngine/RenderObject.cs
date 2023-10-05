@@ -10,8 +10,8 @@ namespace GameEngine
     public class RenderObject
     {
         public Bitmap sprite;
-        public Vector position;
-        public Vector size;
+        public Vector2 position;
+        public Vector2 size;
         public float rotation { 
             get { return rotation; } 
             set { rotation = (value % 360) + (int)(value / 360) + (value < 0 ? 360 : 0); } 
