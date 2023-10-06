@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -11,6 +12,10 @@ namespace GameEngine
         //Vectors hold positions and sizes
         public int x;
         public int y;
+
+        public static readonly Vector2 Zero = new Vector2() { x = 0 };
+        public static readonly Vector2 One = new Vector2() { x = 1 };
+
 
         public Vector2(int x, int y)
         {
