@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GameEngine
+namespace GameEngine.Engine
 {
     public class CameraComp : Comp
     {
@@ -14,7 +14,6 @@ namespace GameEngine
         public CameraComp(TransformComp? parent) : base(parent) { }
         public CameraComp(TransformComp? parent, Color backgroundColor) : base(parent) { this.backgroundColor = backgroundColor; }
 
-        public override void Awk() { }
         public override void Strt() { }
         public override void Upd(float dT) 
         {

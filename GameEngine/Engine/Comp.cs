@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace GameEngine
+namespace GameEngine.Engine
 {
     public abstract class Comp
     {
@@ -19,7 +19,6 @@ namespace GameEngine
             ExpressedEngine.RegisterComp(this);
         }
 
-        public abstract void Awk();
         public abstract void Strt();
         public abstract void Upd(float dT);
     }

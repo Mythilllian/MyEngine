@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GameEngine
+namespace GameEngine.Engine
 {
     public class TransformComp : Comp
     {
-        public string name;
-        public string tag;
+        public string name = "DefaultName";
+        public string tag = "DefaultTag";
         
         public Comp[] children;
 
@@ -23,6 +23,23 @@ namespace GameEngine
 
         public TransformComp(TransformComp? parent, Vector2 position, Vector2 size, float rotation = 0f) : base(parent)
         {
+            this.position = position;
+            this.size = size;
+            this.rotation = rotation;
+        }
+
+        public TransformComp(string name, TransformComp? parent, Vector2 position, Vector2 size, float rotation = 0f) : base(parent)
+        {
+            this.name = name;
+            this.position = position;
+            this.size = size;
+            this.rotation = rotation;
+        }
+
+        public TransformComp(string name, string tag, TransformComp? parent, Vector2 position, Vector2 size, float rotation = 0f) : base(parent)
+        {
+            this.name = name;
+            this.tag = tag;
             this.position = position;
             this.size = size;
             this.rotation = rotation;
@@ -49,7 +66,6 @@ namespace GameEngine
             return children.OfType<T>().ToArray();
         }
 
-        public override void Awk() { }
         public override void Strt() { }
         public override void Upd(float dT) { }
     }

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GameEngine
+namespace GameEngine.Engine
 {
     public class ImageComp : Comp
     {
@@ -13,7 +13,6 @@ namespace GameEngine
 
         public ImageComp(TransformComp? parent) : base(parent) { }
 
-        public override void Awk() { }
         public override void Strt() { }
         public override void Upd(float dT) { }
     }

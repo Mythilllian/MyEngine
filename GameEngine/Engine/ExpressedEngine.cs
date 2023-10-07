@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 
-namespace GameEngine
+namespace GameEngine.Engine
 {
     public abstract class ExpressedEngine
     {
@@ -28,36 +28,34 @@ namespace GameEngine
             Window.Text = title;
             Window.Paint += Renderer;
 
-            Awk();
+            //Event listeners
+            Window.KeyDown += new KeyEventHandler(OnKeyDown);
+            Window.KeyUp += new KeyEventHandler(OnKeyUp);
+            Window.KeyPress += new KeyPressEventHandler(OnKeyPress);
 
-            OnLoad();
+            CreateComps();
 
-            Strt();
+            CallStrt();
 
+            //Creates loop thread
             gameLoopThread = new Thread(GameLoop);
             gameLoopThread.Start();
 
             Application.Run(Window);
 ;       }
 
-        void Awk()
+        void CallStrt()
         {
-            foreach(Comp comp in components)
-            {
-                comp.Awk();
-            }
-        }
-
-        void Strt()
-        {
+            Strt();
             foreach (Comp comp in components)
             {
                 comp.Strt();
             }
         }
 
-        void Upd(float dT)
+        void CallUpd(float dT)
         {
+            Upd(dT);
             foreach (Comp comp in components)
             {
                 comp.Upd(dT);
@@ -72,7 +70,7 @@ namespace GameEngine
                 DateTime startLoop = DateTime.Now;
                 Window.BeginInvoke((MethodInvoker)delegate { Window.Refresh(); });
                 Thread.Sleep(1);
-                Upd((float)(DateTime.Now - startLoop).TotalSeconds);
+                CallUpd((float)(DateTime.Now - startLoop).TotalSeconds);
             }
         }
 
@@ -80,7 +78,7 @@ namespace GameEngine
         {
             Graphics g = e.Graphics;
 
-            g.Clear(((CameraComp)camera.GetComp<CameraComp>()).backgroundColor);
+            g.Clear(((CameraComp)camera.GetCompByType<CameraComp>()).backgroundColor);
 
             g.TranslateTransform(camera.position.x, camera.position.y);
             g.RotateTransform(camera.rotation);
@@ -109,6 +107,14 @@ namespace GameEngine
             components.Remove(component);
         }
 
+        public abstract void OnKeyDown(object sender, KeyEventArgs e);
+        public abstract void OnKeyUp(object sender, KeyEventArgs e);
+        public abstract void OnKeyPress(object sender, KeyPressEventArgs e);
+
+        public abstract void Strt();
+        public abstract void Upd(float dT);
         public abstract void OnLoad();
+        public abstract void CreateComps();
+
     }
 }

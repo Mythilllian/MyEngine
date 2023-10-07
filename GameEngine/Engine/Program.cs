@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using GameEngine.Engine;
 
-namespace GameEngine
+namespace GameEngine.Engine
 {
     internal static class Program
     {
@@ -14,9 +15,7 @@ namespace GameEngine
         [STAThread]
         static void Main()
         {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            new Canvas();
         }
     }
 }
