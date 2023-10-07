@@ -11,7 +11,7 @@ namespace GameEngine
     {
         public Bitmap img;
 
-        public ImageComp(TransformComp parent) : base(parent) { }
+        public ImageComp(TransformComp? parent) : base(parent) { }
 
         public override void Awk() { }
         public override void Strt() { }

@@ -12,7 +12,7 @@ namespace GameEngine
     {
         private string title = "Default Name";
         private Vector2 size = new Vector2(500, 500);
-        private Canvas window;
+        public static Canvas Window { get; private set; }
         private Thread gameLoopThread;
 
         public TransformComp camera;
@@ -23,10 +23,10 @@ namespace GameEngine
             this.title = title;
             this.size = size;
 
-            window = new Canvas();
-            window.Size = new Size(size.x,size.y);
-            window.Text = title;
-            window.Paint += Renderer;
+            Window = new Canvas();
+            Window.Size = new Size(size.x,size.y);
+            Window.Text = title;
+            Window.Paint += Renderer;
 
             Awk();
 
@@ -37,7 +37,7 @@ namespace GameEngine
             gameLoopThread = new Thread(GameLoop);
             gameLoopThread.Start();
 
-            Application.Run(window);
+            Application.Run(Window);
 ;       }
 
         void Awk()
@@ -70,7 +70,7 @@ namespace GameEngine
             while (gameLoopThread.IsAlive)
             {
                 DateTime startLoop = DateTime.Now;
-                window.BeginInvoke((MethodInvoker)delegate { window.Refresh(); });
+                Window.BeginInvoke((MethodInvoker)delegate { Window.Refresh(); });
                 Thread.Sleep(1);
                 Upd((float)(DateTime.Now - startLoop).TotalSeconds);
             }
@@ -80,6 +80,7 @@ namespace GameEngine
         {
             Graphics g = e.Graphics;
 
+            g.Clear(((CameraComp)camera.GetComp<CameraComp>()).backgroundColor);
 
             g.TranslateTransform(camera.position.x, camera.position.y);
             g.RotateTransform(camera.rotation);
@@ -98,12 +99,12 @@ namespace GameEngine
             catch { }
         }
 
-        public void RegisterObj(Comp component)
+        public static void RegisterComp(Comp component)
         {
             components.Add(component);
         }
 
-        public void RemoveObj(Comp component)
+        public static void RemoveComp(Comp component)
         {
             components.Remove(component);
         }
