@@ -13,8 +13,8 @@ namespace GameEngine.Engine
         public int x;
         public int y;
 
-        public static readonly Vector2 Zero = new Vector2() { x = 0 };
-        public static readonly Vector2 One = new Vector2() { x = 1 };
+        public static readonly Vector2 Zero = new Vector2() { x = 0, y = 0 };
+        public static readonly Vector2 One = new Vector2() { x = 1, y = 1 };
 
 
         public Vector2(int x, int y)
@@ -29,7 +29,11 @@ namespace GameEngine.Engine
         public static Vector2 operator +(Vector2 a, Vector2 b) => new Vector2(a.x + b.x, a.y + b.y);
         public static Vector2 operator -(Vector2 a, Vector2 b) => new Vector2(a.x - b.x, a.y - b.y);
         public static Vector2 operator *(Vector2 a, Vector2 b) => new Vector2(a.x * b.x, a.y * b.y);
-        public static Vector2 operator /(Vector2 a, Vector2 b) => new Vector2(a.x / b.x != 0 ? b.x : throw new DivideByZeroException(), a.y / b.y != 0 ? b.y : throw new DivideByZeroException());
+        public static Vector2 operator *(Vector2 a, float b) => new Vector2((int)(a.x * b), (int)(a.y * b));
+        public static Vector2 operator /(Vector2 a, Vector2 b) => 
+            new Vector2(b.x != 0 ? a.x/b.x : throw new DivideByZeroException(), b.y != 0 ? a.y/b.y : throw new DivideByZeroException());
+        public static Vector2 operator /(Vector2 a, float b) => 
+            new Vector2(b != 0 ? (int)(a.x / b) : throw new DivideByZeroException(), b != 0 ? (int)(a.y / b) : throw new DivideByZeroException());
         public static Vector2 operator %(Vector2 a, Vector2 b) => new Vector2(a.x % b.x, a.y % b.y);
     }
 }
