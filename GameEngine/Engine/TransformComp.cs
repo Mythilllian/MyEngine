@@ -11,24 +11,64 @@ namespace GameEngine.Engine
         public string name = "DefaultName";
         public string tag = "DefaultTag";
         
-        public Comp[] children;
+        public List<Comp> children = new List<Comp>();
 
-        public Vector2 position;
-        public Vector2 size;
-        public float rotation
-        {
-            get { return rotation; }
-            set { rotation = (value % 360) + (int)(value / 360) + (value < 0 ? 360 : 0); }
+        private Vector2 _position = Vector2.Zero;
+        public Vector2 position
+        { 
+            get { return _position; } 
+            set 
+            {
+                Vector2 difference = value - _position;
+                
+                foreach (var comp in GetCompsByType<TransformComp>())
+                {
+                    comp.position += difference;
+                }
+                _position += difference;
+            } 
         }
 
-        public TransformComp(TransformComp? parent, Vector2 position, Vector2 size, float rotation = 0f) : base(parent)
+        private Vector2 _size = Vector2.One;
+        public Vector2 size
+        {
+            get { return _size; }
+            set
+            {
+                if (value.x == 0 || value.y == 0 || _size.x == 0 || _size.y == 0) { _size = value;  return; }
+                Vector2 quotient = value / _size;
+                foreach (var comp in GetCompsByType<TransformComp>())
+                {
+                    comp.size *= quotient;
+                }
+                _size *= quotient;
+            }
+        }
+
+        private float _rotation = 0f;
+        public float rotation
+        {
+            get { return _rotation; }
+            set
+            {
+                float difference = value - _rotation;
+                foreach (var comp in GetCompsByType<TransformComp>())
+                {
+                    comp.rotation += difference;
+                }
+                _rotation += difference;
+                _rotation = (_rotation % 360) + (int)(_rotation / 360) + (_rotation < 0 ? 360 : 0);
+            }
+        }
+
+        public TransformComp(Vector2 position, Vector2 size, float rotation = 0f) : base()
         {
             this.position = position;
             this.size = size;
             this.rotation = rotation;
         }
 
-        public TransformComp(string name, TransformComp? parent, Vector2 position, Vector2 size, float rotation = 0f) : base(parent)
+        public TransformComp(string name, Vector2 position, Vector2 size, float rotation = 0f) : base()
         {
             this.name = name;
             this.position = position;
@@ -36,7 +76,7 @@ namespace GameEngine.Engine
             this.rotation = rotation;
         }
 
-        public TransformComp(string name, string tag, TransformComp? parent, Vector2 position, Vector2 size, float rotation = 0f) : base(parent)
+        public TransformComp(string name, string tag, Vector2 position, Vector2 size, float rotation = 0f) : base()
         {
             this.name = name;
             this.tag = tag;
@@ -49,11 +89,11 @@ namespace GameEngine.Engine
         /// Gets first child of a certain type. Returns null if none found.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <returns>First child of a certain type as a Comp? (cast necessary) or null if not found.</returns>
-        public Comp? GetCompByType<T>()
+        /// <returns>First child of a certain type as a Comp? (cast necessary) or default(T) if not found.</returns>
+        public T GetCompByType<T>()
         {
             var childrenOfType = children.OfType<T>();
-            return children.Length != 0 ? childrenOfType.FirstOrDefault() as Comp : null;
+            return children.Count != 0 ? childrenOfType.FirstOrDefault() : default(T);
         }
 
         /// <summary>
@@ -66,7 +106,16 @@ namespace GameEngine.Engine
             return children.OfType<T>().ToArray();
         }
 
-        public override void Strt() { }
-        public override void Upd(float dT) { }
+        /// <summary>
+        /// Adds new component to the TransformComp.
+        /// </summary>
+        /// <param name="comp"></param>
+        public void AddComp(Comp comp)
+        {
+            comp.SetParent(this);
+        }
+
+        public override void OnStart() { }
+        public override void OnUpdate(float dT) { }
     }
 }

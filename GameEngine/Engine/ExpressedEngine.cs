@@ -18,6 +18,8 @@ namespace GameEngine.Engine
         public TransformComp camera;
         public static List<Comp> components = new List<Comp>();
 
+        private readonly object renderLock = new object();
+
         public ExpressedEngine(string title, Vector2 size)
         {
             this.title = title;
@@ -26,39 +28,39 @@ namespace GameEngine.Engine
             Window = new Canvas();
             Window.Size = new Size(size.x,size.y);
             Window.Text = title;
-            Window.Paint += Renderer;
 
             //Event listeners
+            Window.Paint += new PaintEventHandler(Renderer);
             Window.KeyDown += new KeyEventHandler(OnKeyDown);
             Window.KeyUp += new KeyEventHandler(OnKeyUp);
             Window.KeyPress += new KeyPressEventHandler(OnKeyPress);
 
             CreateComps();
 
-            CallStrt();
+            CallStart();
+
+            Application.Run(Window);
 
             //Creates loop thread
             gameLoopThread = new Thread(GameLoop);
             gameLoopThread.Start();
+        }
 
-            Application.Run(Window);
-;       }
-
-        void CallStrt()
+        void CallStart()
         {
-            Strt();
+            OnStart();
             foreach (Comp comp in components)
             {
-                comp.Strt();
+                comp.OnStart();
             }
         }
 
-        void CallUpd(float dT)
+        void CallUpdate(float dT)
         {
-            Upd(dT);
+            OnUpdate(dT);
             foreach (Comp comp in components)
             {
-                comp.Upd(dT);
+                comp.OnUpdate(dT);
             }
         }
 
@@ -70,31 +72,35 @@ namespace GameEngine.Engine
                 DateTime startLoop = DateTime.Now;
                 Window.BeginInvoke((MethodInvoker)delegate { Window.Refresh(); });
                 Thread.Sleep(1);
-                CallUpd((float)(DateTime.Now - startLoop).TotalSeconds);
+                CallUpdate((float)(DateTime.Now - startLoop).TotalSeconds);
             }
         }
 
-        private void Renderer(object sender, PaintEventArgs e)
+        void Renderer(object sender, PaintEventArgs e)
         {
             Graphics g = e.Graphics;
 
-            g.Clear(((CameraComp)camera.GetCompByType<CameraComp>()).backgroundColor);
+            lock (renderLock) 
+            { 
+                if(camera != null)
+                {
+                    g.Clear((camera.GetCompByType<CameraComp>()).backgroundColor);
 
-            g.TranslateTransform(camera.position.x, camera.position.y);
-            g.RotateTransform(camera.rotation);
-            g.ScaleTransform(camera.size.x, camera.size.y);
+                    g.TranslateTransform(camera.position.x, camera.position.y);
+                    g.RotateTransform(camera.rotation);
+                    g.ScaleTransform(camera.size.x, camera.size.y);
+                }
 
-            try
-            {
-                foreach (Comp component in components)
+                foreach (var component in components)
                 {
                     if (component.GetType() == typeof(ImageComp)) 
-                    { 
-                        g.DrawImage(((ImageComp)component).img, component.parent.position.x, component.parent.position.y, component.parent.size.x, component.parent.size.y); 
+                    {
+                        g.DrawImage(((ImageComp)component).img, component.parent.position.x, component.parent.position.y, component.parent.size.x, component.parent.size.y);
                     }
                 }
+
+                Window.BackgroundImage = new Bitmap(Window.Width,Window.Height,g);
             }
-            catch { }
         }
 
         public static void RegisterComp(Comp component)
@@ -111,8 +117,8 @@ namespace GameEngine.Engine
         public abstract void OnKeyUp(object sender, KeyEventArgs e);
         public abstract void OnKeyPress(object sender, KeyPressEventArgs e);
 
-        public abstract void Strt();
-        public abstract void Upd(float dT);
+        public abstract void OnStart();
+        public abstract void OnUpdate(float dT);
         public abstract void OnLoad();
         public abstract void CreateComps();
 

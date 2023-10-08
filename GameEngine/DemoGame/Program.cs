@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Forms;
-using GameEngine.Engine;
 
-namespace GameEngine.Engine
+namespace GameEngine.DemoGame
 {
     internal static class Program
     {
@@ -15,7 +14,7 @@ namespace GameEngine.Engine
         [STAThread]
         static void Main()
         {
-            new Canvas();
+            new DemoGame();
         }
     }
 }

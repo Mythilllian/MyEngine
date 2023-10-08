@@ -13,13 +13,19 @@ namespace GameEngine.Engine
         public TransformComp parent { get; private set; }
         public bool active = true;
 
-        public Comp(TransformComp? parent)
+        public Comp()
         {
-            this.parent = parent;
             ExpressedEngine.RegisterComp(this);
         }
 
-        public abstract void Strt();
-        public abstract void Upd(float dT);
+        public void SetParent(TransformComp parent)
+        {
+            if(this.parent != default(TransformComp)) { parent.children.Remove(this); }
+            this.parent = parent;
+            parent.children.Add(this);
+        }
+
+        public abstract void OnStart();
+        public abstract void OnUpdate(float dT);
     }
 }

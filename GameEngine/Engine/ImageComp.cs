@@ -11,9 +11,9 @@ namespace GameEngine.Engine
     {
         public Bitmap img;
 
-        public ImageComp(TransformComp? parent) : base(parent) { }
+        public ImageComp() : base() { }
 
-        public override void Strt() { }
-        public override void Upd(float dT) { }
+        public override void OnStart() { }
+        public override void OnUpdate(float dT) { }
     }
 }
