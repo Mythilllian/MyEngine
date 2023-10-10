@@ -30,7 +30,6 @@ namespace GameEngine.Engine
         {
             if(t < 0 || t > 1) { throw new ArgumentException(); }
 
-            Vector2 lerp = new Vector2(a.y + ((t * a.x) * (b.y - a.y)) / (b.x - a.x));
             return new Vector2(a.x + ((a.x - b.x) * t), a.y + ((a.y - b.y) * t));
         }
 
