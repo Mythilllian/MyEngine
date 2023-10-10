@@ -11,14 +11,12 @@ namespace GameEngine.Engine
     {
         public Color backgroundColor = Color.Blue;
 
-        public CameraComp() : base() { }
+        public CameraComp() : base() {  }
         public CameraComp(Color backgroundColor) : base() { this.backgroundColor = backgroundColor; }
 
+        public override void OnParentChange() { }
         public override void OnStart() { }
-        public override void OnUpdate(float dT) 
-        {
-            parent.size = new Vector2(ExpressedEngine.Window.Size.Width, ExpressedEngine.Window.Size.Height);
-        }
+        public override void OnUpdate(float dT) { }
 
     }
 }

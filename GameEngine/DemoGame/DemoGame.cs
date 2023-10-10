@@ -5,16 +5,22 @@ using System.Text;
 using System.Drawing;
 using System.Windows.Forms;
 using GameEngine.Engine;
+using YamlDotNet.RepresentationModel;
 
 namespace GameEngine.DemoGame
 {
     class DemoGame : ExpressedEngine
     {
+        public YamlDocument inputDoc;
+
         public DemoGame() : base("DemoGame", new Vector2(1500,1000)) { }
 
         public override void OnKeyDown(object sender, KeyEventArgs e) { }
         public override void OnKeyUp(object sender, KeyEventArgs e) { }
-        public override void OnKeyPress(object sender, KeyPressEventArgs e) { }
+        public override void OnKeyPress(object sender, KeyPressEventArgs e) 
+        {
+            if(e.KeyChar ==  ' ') { }
+        }
 
         public override void OnStart() { }
         public override void OnUpdate(float dT) { }

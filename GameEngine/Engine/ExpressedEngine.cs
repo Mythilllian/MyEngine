@@ -18,15 +18,13 @@ namespace GameEngine.Engine
         public TransformComp camera;
         public static List<Comp> components = new List<Comp>();
 
-        private readonly object renderLock = new object();
-
         public ExpressedEngine(string title, Vector2 size)
         {
             this.title = title;
             this.size = size;
 
             Window = new Canvas();
-            Window.Size = new Size(size.x,size.y);
+            Window.Size = new Size((int)size.x,(int)size.y);
             Window.Text = title;
 
             //Event listeners
@@ -80,27 +78,24 @@ namespace GameEngine.Engine
         {
             Graphics g = e.Graphics;
 
-            lock (renderLock) 
-            { 
-                if(camera != null)
-                {
-                    g.Clear((camera.GetCompByType<CameraComp>()).backgroundColor);
+            if(camera != null)
+            {
+                g.Clear(camera.GetCompByType<CameraComp>().backgroundColor);
 
-                    g.TranslateTransform(camera.position.x, camera.position.y);
-                    g.RotateTransform(camera.rotation);
-                    g.ScaleTransform(camera.size.x, camera.size.y);
-                }
-
-                foreach (var component in components)
-                {
-                    if (component.GetType() == typeof(ImageComp)) 
-                    {
-                        g.DrawImage(((ImageComp)component).img, component.parent.position.x, component.parent.position.y, component.parent.size.x, component.parent.size.y);
-                    }
-                }
-
-                Window.BackgroundImage = new Bitmap(Window.Width,Window.Height,g);
+                g.RotateTransform(camera.rotation);
+                g.TranslateTransform(camera.position.x, camera.position.y);
+                g.ScaleTransform(Window.Size.Width, Window.Size.Height);
             }
+
+            foreach (Comp component in components)
+            {
+                if (component.GetType() == typeof(ImageComp)) 
+                {
+                    g.DrawImage(((ImageComp)component).img, component.parent.position.x, component.parent.position.y, component.parent.size.x, component.parent.size.y);
+                }
+            }
+
+            Window.BackgroundImage = new Bitmap(Window.Width,Window.Height,g);
         }
 
         public static void RegisterComp(Comp component)
