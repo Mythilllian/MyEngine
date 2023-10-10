@@ -9,21 +9,26 @@ namespace GameEngine
 {
     public class Canvas : Form
     {
-        public Canvas()
+        public Canvas() : base()
         {
             DoubleBuffered = true;
         }
-
-        private void InitializeComponent()
+        public Canvas(int width, int height, string name = "Default Name") : base()
         {
-            this.SuspendLayout();
+            DoubleBuffered = true;
+            InitializeComponent(width, height, name);
+        }
+
+        public void InitializeComponent(int width, int height, string name = "Default Name")
+        {
+            SuspendLayout();
             // 
             // Canvas
             // 
-            this.ClientSize = new System.Drawing.Size(284, 261);
-            this.Name = "Canvas";
+            ClientSize = new System.Drawing.Size(width, height);
+            Name = name;
             
-            this.ResumeLayout(false);
+            ResumeLayout(false);
 
         }
     }

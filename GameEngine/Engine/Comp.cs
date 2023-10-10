@@ -18,6 +18,12 @@ namespace GameEngine.Engine
             ExpressedEngine.RegisterComp(this);
         }
 
+        public Comp(TransformComp parent)
+        {
+            SetParent(parent);
+            ExpressedEngine.RegisterComp(this);
+        }
+
         public void SetParent(TransformComp parent)
         {
             if(this.parent != default(TransformComp)) { parent.children.Remove(this); }
@@ -25,6 +31,7 @@ namespace GameEngine.Engine
             parent.children.Add(this);
         }
 
+        public abstract void OnParentChange();
         public abstract void OnStart();
         public abstract void OnUpdate(float dT);
     }

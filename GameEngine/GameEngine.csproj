@@ -74,8 +74,11 @@
     <Compile Include="Engine\Comp.cs" />
     <Compile Include="Engine\ExpressedEngine.cs" />
     <Compile Include="Engine\ImageComp.cs" />
+    <Compile Include="Engine\InputMap.cs" />
     <Compile Include="Engine\TransformComp.cs" />
+    <Compile Include="Engine\TransformStruct.cs" />
     <Compile Include="Engine\Vector2.cs" />
+    <Compile Include="IO\YamlDeserializer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Engine\Canvas.resx">
       <DependentUpon>Canvas.cs</DependentUpon>
@@ -90,6 +93,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <None Include="DemoGame\InputMap.yaml" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -103,7 +107,11 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <PackageReference Include="YamlDotNet">
+      <Version>13.5.2</Version>
+    </PackageReference>
+  </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
       <Visible>False</Visible>

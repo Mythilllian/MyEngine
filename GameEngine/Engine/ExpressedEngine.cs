@@ -14,6 +14,7 @@ namespace GameEngine.Engine
         private Vector2 size = new Vector2(500, 500);
         public static Canvas Window { get; private set; }
         private Thread gameLoopThread;
+        private InputMap inputMap;
 
         public TransformComp camera;
         public static List<Comp> components = new List<Comp>();
@@ -84,7 +85,14 @@ namespace GameEngine.Engine
 
                 g.RotateTransform(camera.rotation);
                 g.TranslateTransform(camera.position.x, camera.position.y);
-                g.ScaleTransform(Window.Size.Width, Window.Size.Height);
+                try
+                {
+                    g.ScaleTransform(Window.Size.Width, Window.Size.Height);
+                }
+                catch
+                {
+                    g.ScaleTransform(Window.Size.Width * camera.size.x, Window.Size.Height * camera.size.y);
+                }
             }
 
             foreach (Comp component in components)

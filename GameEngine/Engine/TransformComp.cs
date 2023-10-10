@@ -115,6 +115,7 @@ namespace GameEngine.Engine
             comp.SetParent(this);
         }
 
+        public override void OnParentChange() { }
         public override void OnStart() { }
         public override void OnUpdate(float dT) { }
     }

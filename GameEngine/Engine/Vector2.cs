@@ -5,17 +5,33 @@ namespace GameEngine.Engine
     public struct Vector2
     {
         //Vectors hold positions and sizes
-        public int x;
-        public int y;
+        public float x;
+        public float y;
 
         public static readonly Vector2 Zero = new Vector2() { x = 0 };
         public static readonly Vector2 One = new Vector2() { x = 1 };
 
 
-        public Vector2(int x, int y)
+        public Vector2(float x, float y)
         {
             this.x = x;
             this.y = y;
+        }
+
+        //Static Functions
+        /// <summary>
+        /// Finds a Vector2 in between a and b in the position of t
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <param name="t">Position where the interpolation occurs</param>
+        /// <returns></returns>
+        public static Vector2 Interpolate(Vector2 a, Vector2 b, float t = 0.5f)
+        {
+            if(t < 0 || t > 1) { throw new ArgumentException(); }
+
+            Vector2 lerp = new Vector2(a.y + ((t * a.x) * (b.y - a.y)) / (b.x - a.x));
+            return new Vector2(a.x + ((a.x - b.x) * t), a.y + ((a.y - b.y) * t));
         }
 
         //Operators

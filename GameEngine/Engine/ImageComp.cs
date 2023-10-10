@@ -13,6 +13,7 @@ namespace GameEngine.Engine
 
         public ImageComp() : base() { }
 
+        public override void OnParentChange() { }
         public override void OnStart() { }
         public override void OnUpdate(float dT) { }
     }
