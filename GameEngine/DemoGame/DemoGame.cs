@@ -1,34 +1,43 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
+using Newtonsoft.Json;
 using System.Drawing;
 using System.Windows.Forms;
 using GameEngine.Engine;
-using YamlDotNet.RepresentationModel;
+using System.IO;
+using System.Reflection;
 
 namespace GameEngine.DemoGame
 {
     class DemoGame : ExpressedEngine
     {
-        public YamlDocument inputDoc;
+        TransformComp obj;
 
-        public DemoGame() : base("DemoGame", new Vector2(1500,1000)) { }
+        public DemoGame() : base(
+            "DemoGame", 
+            new Vector2(1500,1000), 
+            Path.Combine(Directory.GetCurrentDirectory() + "InputMap.json")) { }
 
-        public override void OnKeyDown(object sender, KeyEventArgs e) { }
-        public override void OnKeyUp(object sender, KeyEventArgs e) { }
-        public override void OnKeyPress(object sender, KeyPressEventArgs e) 
+        public override void OnStart() 
         {
-            if(e.KeyChar ==  ' ') { }
         }
-
-        public override void OnStart() { }
-        public override void OnUpdate(float dT) { }
+        public override void OnUpdate(float dT) 
+        {
+            if (Inputs.IsActive("left")) { obj.position -= new Vector2(1,0); }
+            if (Inputs.IsActive("right")) { obj.position += new Vector2(1, 0); }
+        }
         public override void OnLoad() { }
         public override void CreateComps() 
         {
-            camera = new TransformComp("Camera",null,Vector2.Zero,Vector2.One);
+            camera = new TransformComp("Camera",null,Vector2.Zero, Vector2.One);
             camera.AddComp(new CameraComp());
+
+            obj = new TransformComp("Player", new Vector2(0,1000), new Vector2(10, 2000));
+            ShapeComp shapeComp = obj.AddComp<ShapeComp>(new ShapeComp());
+
+            shapeComp.shape = new Shape(ShapeType.Circle, new Vector2(200, 200), Color.ForestGreen);
+            
         }
     }
 }

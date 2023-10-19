@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+using GameEngine.IO;
 
 namespace GameEngine.Engine
 {
@@ -12,17 +13,29 @@ namespace GameEngine.Engine
     {
         private string title = "Default Name";
         private Vector2 size = new Vector2(500, 500);
+
+        //Event handlers
+        public event EventHandler Start;
+        public event EventHandler<UpdateEventArgs> Update;
+
         public static Canvas Window { get; private set; }
         private Thread gameLoopThread;
-        private InputMap inputMap;
+
+        internal InputMap Inputs;
 
         public TransformComp camera;
-        public static List<Comp> components = new List<Comp>();
+        public static List<Comp> components { get; private set; }
 
-        public ExpressedEngine(string title, Vector2 size)
+        private KeysConverter kc = new KeysConverter();
+
+        public ExpressedEngine(string title, Vector2 size, string json)
         {
+            Inputs = new InputMap(JsonDeserializer.DeserializeJson<Input[]>(json));
+
             this.title = title;
             this.size = size;
+
+            components = new List<Comp>();
 
             Window = new Canvas();
             Window.Size = new Size((int)size.x,(int)size.y);
@@ -32,11 +45,11 @@ namespace GameEngine.Engine
             Window.Paint += new PaintEventHandler(Renderer);
             Window.KeyDown += new KeyEventHandler(OnKeyDown);
             Window.KeyUp += new KeyEventHandler(OnKeyUp);
-            Window.KeyPress += new KeyPressEventHandler(OnKeyPress);
+            //Window.KeyPress += new KeyPressEventHandler(OnKeyPress);
 
             CreateComps();
 
-            CallStart();
+            Start?.Invoke(this,new EventArgs());
 
             Application.Run(Window);
 
@@ -45,25 +58,6 @@ namespace GameEngine.Engine
             gameLoopThread.Start();
         }
 
-        void CallStart()
-        {
-            OnStart();
-            foreach (Comp comp in components)
-            {
-                comp.OnStart();
-            }
-        }
-
-        void CallUpdate(float dT)
-        {
-            OnUpdate(dT);
-            foreach (Comp comp in components)
-            {
-                comp.OnUpdate(dT);
-            }
-        }
-
-
         void GameLoop()
         {
             while (gameLoopThread.IsAlive)
@@ -71,7 +65,7 @@ namespace GameEngine.Engine
                 DateTime startLoop = DateTime.Now;
                 Window.BeginInvoke((MethodInvoker)delegate { Window.Refresh(); });
                 Thread.Sleep(1);
-                CallUpdate((float)(DateTime.Now - startLoop).TotalSeconds);
+                Update?.Invoke(this, new UpdateEventArgs((float)(DateTime.Now - startLoop).TotalSeconds));
             }
         }
 
@@ -97,7 +91,7 @@ namespace GameEngine.Engine
 
             foreach (Comp component in components)
             {
-                if (component.GetType() == typeof(ImageComp)) 
+                if (component.GetType() == typeof(ImageComp) && ((ImageComp)component).img != null) 
                 {
                     g.DrawImage(((ImageComp)component).img, component.parent.position.x, component.parent.position.y, component.parent.size.x, component.parent.size.y);
                 }
@@ -109,21 +103,29 @@ namespace GameEngine.Engine
         public static void RegisterComp(Comp component)
         {
             components.Add(component);
+            Log.LogInfo("Registered #" + components.Count + " Type: " + component.GetType().ToString(), ConsoleColor.Green);
         }
 
         public static void RemoveComp(Comp component)
         {
             components.Remove(component);
+            Log.LogInfo("Removed Type: " + component.GetType().ToString(), ConsoleColor.Red);
         }
 
-        public abstract void OnKeyDown(object sender, KeyEventArgs e);
-        public abstract void OnKeyUp(object sender, KeyEventArgs e);
-        public abstract void OnKeyPress(object sender, KeyPressEventArgs e);
+        public void OnKeyDown(object sender, KeyEventArgs e) { Inputs.SetActive(kc.ConvertToString(e.KeyValue).ToLower()[0]); }
+        public void OnKeyUp(object sender, KeyEventArgs e) { Inputs.SetInactive(kc.ConvertToString(e.KeyValue)[0]); }
 
         public abstract void OnStart();
         public abstract void OnUpdate(float dT);
         public abstract void OnLoad();
         public abstract void CreateComps();
 
+    }
+
+    public class UpdateEventArgs : EventArgs
+    {
+        public float delta { get; set; }
+
+        public UpdateEventArgs(float delta) { this.delta = delta; }
     }
 }

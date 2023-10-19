@@ -1,0 +1,10 @@
+﻿[
+  {
+    "name": "left",
+    "keys": [ "a" ]
+  },
+  {
+    "name": "right",
+    "keys": [ "d" ]
+  }
+]

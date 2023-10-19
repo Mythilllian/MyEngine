@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 
 namespace GameEngine.Engine
 {
@@ -46,6 +47,8 @@ namespace GameEngine.Engine
         public static Vector2 operator %(Vector2 a, Vector2 b) => new Vector2(a.x % b.x, a.y % b.y);
         public static bool operator ==(Vector2 a, Vector2 b) => a.Equals(b);
         public static bool operator !=(Vector2 a, Vector2 b) => !a.Equals(b);
+        public static explicit operator Size(Vector2 a) => new Size((int)a.x,(int)a.y);
+        public static explicit operator Point(Vector2 a) => new Point((int)a.x,(int)a.y);
 
         public override bool Equals(object obj)
         {

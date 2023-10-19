@@ -9,9 +9,11 @@ namespace GameEngine.Engine
 {
     public class ImageComp : Comp
     {
-        public Bitmap img;
+        public Image img = null;
 
         public ImageComp() : base() { }
+        public ImageComp(Image img) : base() { this.img = img; }
+
 
         public override void OnParentChange() { }
         public override void OnStart() { }

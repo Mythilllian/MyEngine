@@ -97,7 +97,7 @@ namespace GameEngine.Engine
         }
 
         /// <summary>
-        /// Gets all children of a certain type.
+        /// Gets all children of a certain type
         /// </summary>
         /// <param name="T"></param>
         /// <returns>Array of children of a certain type as a Comp[] (cast necessary) or an empty array if none found.</returns>
@@ -107,12 +107,30 @@ namespace GameEngine.Engine
         }
 
         /// <summary>
-        /// Adds new component to the TransformComp.
+        /// Adds new component to the TransformComp
         /// </summary>
         /// <param name="comp"></param>
-        public void AddComp(Comp comp)
+        public Comp AddComp(Comp comp)
         {
             comp.SetParent(this);
+            return comp;
+        }
+
+        /// <summary>
+        /// Adds new component to the TransformComp
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="comp"></param>
+        /// <returns></returns>
+        /// <exception cref="InvalidCastException">Throws if T is not a Comp</exception>
+        public T AddComp<T>(Comp comp)
+        {
+            comp.SetParent(this);
+            try
+            {
+                return (T)Convert.ChangeType(comp, typeof(T));
+            }
+            catch { throw new InvalidCastException("Type T was not a Comp."); }
         }
 
         public override void OnParentChange() { }
