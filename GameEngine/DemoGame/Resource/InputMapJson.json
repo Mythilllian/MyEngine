@@ -1,10 +1,10 @@
 ﻿[
   {
     "name": "left",
-    "keys": [ "A" ]
+    "keys": [ "a" ]
   },
   {
     "name": "right",
-    "keys": [ "D" ]
+    "keys": [ "d" ]
   }
 ]

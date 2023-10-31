@@ -10,12 +10,10 @@ namespace GameEngine.Engine
     public struct InputMap
     {
         public Input[] inputs;
-        readonly KeysConverter kc;
 
         public InputMap(Input[] inputs)
         {
             this.inputs = inputs != default(Input[]) ? inputs : new Input[0];
-            kc = new KeysConverter();
         }
 
         public bool IsActive(string name)
@@ -31,16 +29,16 @@ namespace GameEngine.Engine
         /// Gets inputs from a character presesd
         /// </summary>
         /// <param name="keyChar">The character pressed</param>\
-        public Input[] GetInputs(string key)
+        public Input[] GetInputs(char keyChar)
         {
             Log.LogInfo(
                 (from input in inputs
-                from string _key in input.keys
+                from char key in input.keys
                 select key).ToString()
                 ,ConsoleColor.Yellow);
             return (from input in inputs
-                    from string _key in input.keys
-                    where key == _key
+                    from char key in input.keys
+                    where keyChar == key
                     select input) as Input[];
         }
 
@@ -48,43 +46,40 @@ namespace GameEngine.Engine
         /// Sets all inputs active with a certain key
         /// </summary>
         /// <param name="keyChar">The character pressed</param>
-        public void SetActive(int keyVal)
+        public void SetActive(char keyChar)
         {
-            string key = kc.ConvertToString(keyVal);
-            ((from input in inputs
-              from string _key in input.keys
-              from List<string> pressed in input.pressed
-              where key == _key
-              where !pressed.Contains(key)
-              select input.pressed) as List<int>)?.Add(keyVal);
+            foreach (Input input in GetInputs(keyChar))
+
+            {
+                input.pressed.Item2.Add(keyChar);
+                input.pressed.Item1 = true;
+            }
         }
 
         /// <summary>
         /// Sets all inputs inactive with a certain key
         /// </summary>
         /// <param name="keyChar">The character pressed</param>
-        public void SetInactive(int keyVal)
+        public void SetInactive(char keyChar)
         {
-            string key = kc.ConvertToString(keyVal);
-            ((from input in inputs
-              from string _key in input.keys
-              from List<string> pressed in input.pressed
-              where key == _key
-              where !pressed.Contains(key)
-              select input.pressed) as List<int>)?.Remove(keyVal);
+            foreach (Input input in GetInputs(keyChar))
+            {
+                input.pressed.Item2.Remove(keyChar);
+                input.pressed.Item1 = input.pressed.Item2.Count == 0 ? false : true;
+            }
         }
 
         /// <summary>
         /// Finds the first input name
         /// </summary>
         /// <param name="keyChar">The character pressed</param>
-        public string GetFirstInputName(string key)
+        public string GetFirstInputName(char keyChar)
         {
             foreach(var input in inputs)
             {
-                foreach(string _key in input.keys)
+                foreach(char key in input.keys)
                 {
-                    if(key == _key)
+                    if(keyChar == key)
                     {
                         return input.name;
                     }
@@ -98,11 +93,11 @@ namespace GameEngine.Engine
     public class Input
     {
         public string name;
-        public string[] keys;
+        public char[] keys;
         
         [JsonIgnore]
-        public List<int> pressed;
+        public (bool,List<char>) pressed;
         [JsonIgnore]
-        public bool isPressed { get { return pressed.Count > 0; } set { } }
+        public bool isPressed { get { return pressed.Item1; } set { } }
     }
 }

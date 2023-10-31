@@ -24,8 +24,8 @@ namespace GameEngine.DemoGame
         }
         public override void OnUpdate(float dT) 
         {
-            if (Inputs.IsActive("left")) { Log.LogInfo("Left pressed"); obj.position -= new Vector2(1,0); }
-            if (Inputs.IsActive("right")) { Log.LogInfo("Right pressed"); obj.position += new Vector2(1, 0); }
+            if (Inputs.IsActive("left")) { obj.position -= new Vector2(1,0); }
+            if (Inputs.IsActive("right")) { obj.position += new Vector2(1, 0); }
         }
         public override void OnLoad() { }
         public override void CreateComps() 
