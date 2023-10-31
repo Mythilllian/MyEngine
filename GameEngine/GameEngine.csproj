@@ -74,6 +74,11 @@
   <ItemGroup>
     <Compile Include="DemoGame\DemoGame.cs" />
     <Compile Include="DemoGame\Program.cs" />
+    <Compile Include="DemoGame\Resource\InputMap.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>InputMap.resx</DependentUpon>
+    </Compile>
     <Compile Include="Engine\CameraComp.cs" />
     <Compile Include="Engine\Canvas.cs">
       <SubType>Form</SubType>
@@ -89,7 +94,12 @@
     <Compile Include="Engine\TransformStruct.cs" />
     <Compile Include="Engine\Vector2.cs" />
     <Compile Include="IO\JsonDeserializer.cs" />
+    <Compile Include="IO\DataFile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="DemoGame\Resource\InputMap.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>InputMap.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Engine\Canvas.resx">
       <DependentUpon>Canvas.cs</DependentUpon>
     </EmbeddedResource>
@@ -103,7 +113,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <None Include="DemoGame\InputMap.json" />
+    <None Include="DemoGame\Resource\InputMapJson.json" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

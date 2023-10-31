@@ -31,25 +31,24 @@ namespace GameEngine.Engine
         /// <param name="keyChar">The character pressed</param>\
         public Input[] GetInputs(char keyChar)
         {
-            Log.LogInfo(
-                (from input in inputs
-                from char key in input.keys
-                select key).ToString()
-                ,ConsoleColor.Yellow);
+            Log.LogInfo((from input in inputs
+                                  where input.keys.Contains(keyChar)
+                                  select input) as Input[]
+                , ConsoleColor.Yellow);
             return (from input in inputs
-                    from char key in input.keys
-                    where keyChar == key
-                    select input) as Input[];
+                             where input.keys.Contains(keyChar)
+                             select input) as Input[];
         }
 
         /// <summary>
         /// Sets all inputs active with a certain key
         /// </summary>
         /// <param name="keyChar">The character pressed</param>
-        public void SetActive(char keyChar)
+        public void SetActive(char keyChar,bool active = true)
         {
+            if (!active) { SetInactive(keyChar); return; }
+            Log.LogInfo(keyChar);
             foreach (Input input in GetInputs(keyChar))
-
             {
                 input.pressed.Item2.Add(keyChar);
                 input.pressed.Item1 = true;

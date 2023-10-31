@@ -19,7 +19,7 @@ namespace GameEngine.IO
             }
             catch
             {
-                deserialized = default(T);
+                Log.LogInfo("Attempted to read empty JSON file", ConsoleColor.Red);
             }
             return deserialized;
         }

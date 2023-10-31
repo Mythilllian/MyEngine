@@ -31,6 +31,10 @@ namespace GameEngine.Engine
         public ExpressedEngine(string title, Vector2 size, string json)
         {
             Inputs = new InputMap(JsonDeserializer.DeserializeJson<Input[]>(json));
+            if(Inputs.inputs == new Input[0])
+            {
+                Log.LogInfo("InputMap not found", ConsoleColor.Red);
+            }
 
             this.title = title;
             this.size = size;

@@ -8,7 +8,7 @@ namespace GameEngine.Engine
 {
     public static class Log
     {
-        public static void LogInfo(string text, ConsoleColor consoleColor = ConsoleColor.Gray)
+        public static void LogInfo(object text, ConsoleColor consoleColor = ConsoleColor.Gray)
         {
             Console.ForegroundColor = consoleColor;
             Console.WriteLine(text);
