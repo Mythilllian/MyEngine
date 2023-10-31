@@ -24,6 +24,22 @@ namespace GameEngine.IO
             return deserialized;
         }
 
+        public static T DeserializeJson<T>(string json, out bool success)
+        {
+            T deserialized;
+            try
+            {
+                deserialized = JsonConvert.DeserializeObject<T>(json);
+                success = true;
+            }
+            catch
+            {
+                deserialized = default(T);
+                success = false;
+            }
+            return deserialized;
+        }
+
         public static T DeseralizePath<T>(string path)
         {
             if (File.Exists(path))

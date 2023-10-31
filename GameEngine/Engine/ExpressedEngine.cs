@@ -30,11 +30,8 @@ namespace GameEngine.Engine
 
         public ExpressedEngine(string title, Vector2 size, string json)
         {
-            Inputs = new InputMap(JsonDeserializer.DeserializeJson<Input[]>(json));
-            if(Inputs.inputs == new Input[0])
-            {
-                Log.LogInfo("InputMap not found", ConsoleColor.Red);
-            }
+            Inputs = new InputMap(JsonDeserializer.DeserializeJson<Input[]>(json, out bool inputSuccess));
+            if(!inputSuccess) { Log.LogInfo("InputMap not found!", ConsoleColor.Red); }
 
             this.title = title;
             this.size = size;
@@ -116,8 +113,8 @@ namespace GameEngine.Engine
             Log.LogInfo("Removed Type: " + component.GetType().ToString(), ConsoleColor.Red);
         }
 
-        public void OnKeyDown(object sender, KeyEventArgs e) { Inputs.SetActive(kc.ConvertToString(e.KeyValue).ToLower()[0]); }
-        public void OnKeyUp(object sender, KeyEventArgs e) { Inputs.SetInactive(kc.ConvertToString(e.KeyValue)[0]); }
+        public void OnKeyDown(object sender, KeyEventArgs e) { Inputs.SetActive(e.KeyValue); }
+        public void OnKeyUp(object sender, KeyEventArgs e) { Inputs.SetInactive(e.KeyValue); }
 
         public abstract void OnStart();
         public abstract void OnUpdate(float dT);
